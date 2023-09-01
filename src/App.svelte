@@ -1,5 +1,5 @@
 <script>
-  // import { onMount } from "svelte";
+  import { onMount } from "svelte";
   import Weather from "./Weather.svelte";
   import CurrenWeather from "./CurrenWeather.svelte";
   import Loading from "./Loading.svelte";
@@ -12,6 +12,7 @@
     },
   };
 
+  // Loading animation
   let LoadingAnimation = false;
 
   let WeatherData = {};
@@ -20,7 +21,6 @@
   const getWeather = async (event) => {
     LoadingAnimation = true;
     try {
-      event.preventDefault();
       let city = event.target.seachbar.value.trim();
       if (city === "") {
         LoadingAnimation = false;
@@ -47,11 +47,11 @@
       console.error(error);
       errorMessage = "An error occurred.";
     }
-
-    // Loading animation
   };
-
-  // onMount(() => {});
+  onMount(() => {
+    const defaultCity = "New York";
+    getWeather({ target: { seachbar: { value: defaultCity } } });
+  });
 
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 2);
@@ -68,22 +68,20 @@
 
 <!-- SearchBar -->
 <form
-  on:submit={getWeather}
+  on:submit|preventDefault={getWeather}
   class="flex sm:w-[50%] items-center mx-2 sm:ml-auto space-x-3 my-4"
 >
   <input
     type="text"
     name="seachbar"
     placeholder="Enter your city"
-    class="w-full border px-3 py-2 rounded-xl focus:outline-none focus:border-blue-500"
+    class="w-full sm:w-56 border border-black px-3 py-2 rounded-xl focus:outline-none focus:border-blue-500"
   />
   <button
     type="submit"
-    class="flex  rounded hover:bg-pink-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
+    class="flex rounded hover:bg-pink-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
   >
-   <span class="material-symbols-outlined scale-150">
-search
-</span>
+    <span class="material-symbols-outlined scale-150"> search </span>
   </button>
 </form>
 

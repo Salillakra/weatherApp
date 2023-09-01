@@ -10,3 +10,8 @@
   }
 }
 
+body {
+  @apply max-w-[68%] mx-auto;
+  font-family: 'Caveat', cursive;
+  font-family: "Dosis", sans-serif;
+}
