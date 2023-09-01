@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .shadow-neon {
+    box-shadow: 0 0 10px rgba(148, 0, 211, 0.6),
+      0 0 20px rgba(255, 105, 180, 0.5), 0 0 30px rgba(255, 182, 193, 0.4),
+      0 0 40px rgba(0, 0, 255, 0.6);
+  }
+}
+

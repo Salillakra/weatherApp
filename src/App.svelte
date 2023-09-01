@@ -1,6 +1,8 @@
 <script>
-  import { onMount } from "svelte";
+  // import { onMount } from "svelte";
   import Weather from "./Weather.svelte";
+  import CurrenWeather from "./CurrenWeather.svelte";
+  import Loading from "./Loading.svelte";
 
   const context = {
     method: "GET",
@@ -10,14 +12,18 @@
     },
   };
 
+  let LoadingAnimation = false;
+
   let WeatherData = {};
   let errorMessage = "";
 
   const getWeather = async (event) => {
+    LoadingAnimation = true;
     try {
       event.preventDefault();
       let city = event.target.seachbar.value.trim();
       if (city === "") {
+        LoadingAnimation = false;
         errorMessage = "Please enter a city.";
         return;
       }
@@ -30,44 +36,59 @@
       if (response.ok) {
         WeatherData = await response.json();
         errorMessage = "";
+
+        LoadingAnimation = false; //shopping the animation
       } else {
+        LoadingAnimation = false; //shopping the animation
         errorMessage = "Error fetching weather data.";
       }
     } catch (error) {
+      LoadingAnimation = false; //shopping the animation
       console.error(error);
       errorMessage = "An error occurred.";
     }
+
+    // Loading animation
   };
 
-  onMount(() => {});
+  // onMount(() => {});
 
-  // Get the current date
   const currentDate = new Date();
-
-  // Add 2 days to the current date
   currentDate.setDate(currentDate.getDate() + 2);
 
-  // Get the day and month from the updated date
-  const DayAfterTommorow = currentDate.getDate();
-  const DayAfterTommorowMonth = currentDate.toLocaleString("default", {
+  const dayAfterTomorrow = currentDate.getDate();
+  const monthAfterTomorrow = currentDate.toLocaleString("default", {
     month: "long",
   });
 </script>
 
-<form on:submit={getWeather}>
+{#if LoadingAnimation}
+  <Loading />
+{/if}
+
+<!-- SearchBar -->
+<form
+  on:submit={getWeather}
+  class="flex sm:w-[50%] items-center mx-2 sm:ml-auto space-x-3 my-4"
+>
   <input
     type="text"
     name="seachbar"
     placeholder="Enter your city"
-    class="w-full border px-3 py-2 rounded focus:outline-none focus:border-blue-500"
+    class="w-full border px-3 py-2 rounded-xl focus:outline-none focus:border-blue-500"
   />
   <button
     type="submit"
-    class="mt-3 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
+    class="flex  rounded hover:bg-pink-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
   >
-    Get Weather
+   <span class="material-symbols-outlined scale-150">
+search
+</span>
   </button>
 </form>
+
+<!-- header -->
+<CurrenWeather data={WeatherData} />
 
 {#if errorMessage}
   <p class="text-red-500">{errorMessage}</p>
@@ -82,7 +103,7 @@
         {:else if i === 1}
           Tomorrow
         {:else if i === 2}
-          {DayAfterTommorow} {DayAfterTommorowMonth}
+          {dayAfterTomorrow} {monthAfterTomorrow}
         {/if}
       </h1>
       <div>
@@ -91,3 +112,6 @@
     </div>
   {/each}
 {/if}
+
+<style>
+</style>
