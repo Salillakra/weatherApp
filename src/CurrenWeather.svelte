@@ -9,7 +9,7 @@
       <img
         src={data.current.condition.icon}
         alt={data.current.condition.text}
-        class=" -translate-y-5 -translate-x-3 scale-110"
+        class=" -translate-y-5 -translate-x-1 scale-110"
       />
     </div>
     <span class="text-7xl">{data.current.temp_c} &degC</span>

@@ -3,6 +3,8 @@
   import Weather from "./Weather.svelte";
   import CurrenWeather from "./CurrenWeather.svelte";
   import Loading from "./Loading.svelte";
+  // importing the location
+  import { location } from "./utils/location.js";
 
   const context = {
     method: "GET",
@@ -15,7 +17,7 @@
   // Loading animation
   let LoadingAnimation = false;
 
-  let WeatherData = {};
+  let WeatherData = new Object();
   let errorMessage = "";
 
   const getWeather = async (event) => {
@@ -40,17 +42,29 @@
         LoadingAnimation = false; //shopping the animation
       } else {
         LoadingAnimation = false; //shopping the animation
-        errorMessage = "Error fetching weather data.";
+        errorMessage =
+          "An error occurred. Lord Indra Don't want you to see weather";
       }
     } catch (error) {
       LoadingAnimation = false; //shopping the animation
       console.error(error);
-      errorMessage = "An error occurred.";
+      errorMessage =
+        "An error occurred. Lord Indra Don't want you to see weather";
     }
   };
-  onMount(() => {
-    const defaultCity = "New York";
-    getWeather({ target: { seachbar: { value: defaultCity } } });
+
+  onMount(async () => {
+    getWeather({ target: { seachbar: { value: "New York" } } });
+    try {
+      // Get the current location
+      const currentLocation = await location();
+      console.log(currentLocation);
+      // Pass the current location to the getWeather function
+      getWeather({ target: { seachbar: { value: currentLocation } } });
+    } catch (error) {
+      // Handle errors here
+      console.error(error);
+    }
   });
 
   const currentDate = new Date();
@@ -77,19 +91,17 @@
     placeholder="Enter your city"
     class="w-full sm:w-56 border border-black px-3 py-2 rounded-xl focus:outline-none focus:border-blue-500"
   />
-  <button
-    type="submit"
-    class="flex rounded hover:bg-pink-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
+
+  <button type="submit" class="material-symbols-outlined scale-150">
+    search</button
   >
-    <span class="material-symbols-outlined scale-150"> search </span>
-  </button>
 </form>
 
 <!-- header -->
 <CurrenWeather data={WeatherData} />
 
 {#if errorMessage}
-  <p class="text-red-500">{errorMessage}</p>
+  <p class="text-red-500 text-center text-xl">{errorMessage}</p>
 {/if}
 
 {#if WeatherData.forecast}
@@ -111,5 +123,12 @@
   {/each}
 {/if}
 
-<style>
-</style>
+
+
+<!-- Footer -->
+<footer class="text-center text-gray-600 text-sm py-2">
+  <span class="">&copy; {(new Date).getFullYear()} Salil Lakra. All Rights Reserved. </span>
+  <span class="italic">Skyscape</span> is licensed under the
+  <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">Apache License, Version 2.0</a>.
+</footer>
+
