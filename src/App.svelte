@@ -55,11 +55,10 @@
 
   onMount(async () => {
     getWeather({ target: { seachbar: { value: "New York" } } });
+
     try {
       // Get the current location
       const currentLocation = await location();
-      console.log(currentLocation);
-      // Pass the current location to the getWeather function
       getWeather({ target: { seachbar: { value: currentLocation } } });
     } catch (error) {
       // Handle errors here
@@ -123,12 +122,16 @@
   {/each}
 {/if}
 
-
-
 <!-- Footer -->
 <footer class="text-center text-gray-600 text-sm py-2">
-  <span class="">&copy; {(new Date).getFullYear()} Salil Lakra. All Rights Reserved. </span>
+  <span class=""
+    >&copy; {new Date().getFullYear()} Salil Lakra. All Rights Reserved.
+  </span>
   <span class="italic">Skyscape</span> is licensed under the
-  <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">Apache License, Version 2.0</a>.
+  <a
+    href="http://www.apache.org/licenses/LICENSE-2.0"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="text-blue-500 hover:underline">Apache License, Version 2.0</a
+  >.
 </footer>
-
